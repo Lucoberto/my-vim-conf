@@ -2,4 +2,6 @@
 
 ## Instaled plugins
 
-+ 
++ Airline
++ NerdTree
++ syntastic
