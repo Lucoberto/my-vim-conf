@@ -1,98 +1,139 @@
-call plug#begin()
-" The default plugin directory will be as follows:
-"   - Vim (Linux/macOS): '~/.vim/plugged'
-"   - Vim (Windows): '~/vimfiles/plugged'
-"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
-" You can specify a custom plugin directory by passing it as the argument
-"   - e.g. `call plug#begin('~/.vim/plugged')`
-"   - Avoid using standard Vim directory names like 'plugin'
+" Plugin derectory
+call plug#begin('~/.local/share/nvim/plugged')
 
-" Make sure you use single quotes
-
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align'
-
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" On-demand loading
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-" Syntastic
-Plug 'scrooloose/syntastic'
-
-
-" Using a non-default branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-" Plugin outside ~/.vim/plugged with post-update hook
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" Unmanaged plugin (manually installed and updated)
-Plug '~/my-prototype-plugin'
-
-" Vim's bottom status theme
-Plug 'vim-airline/vim-airline'
-
-" Initialize plugin system
-" - Automatically executes `filetype plugin indent on` and `syntax enable`.
-
-" --------------------------Config Airline----------------------------------
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '>'
-
-
-" -------------------------Config NerdTree----------------------------------
-"autocmd VimEnter * NERDTree
-
-" Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
-
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-let NERDTreeMapOpenInTab='<ENTER>'
-
-" ------------------------Config syntastic----------------------------------
-execute pathogen#infect()
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_aggregate_errors = 1
-
-" -------------------------Key binding---------------------------------------
-nnoremap <C-j> :tabprevious<CR>                   
-nnoremap <C-k> :tabnext<CR>
-nnoremap <C-n> :tabnew<CR>
-nnoremap <C-x> :q!<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-l> :NERDTreeFocus<CR>
+" Status line 
+Plug 'nvim-lualine/lualine.nvim'  
+" Icons                                                          
+Plug 'nvim-tree/nvim-web-devicons'
+" Buffer tabs
+Plug 'ap/vim-buftabline'
+" Deppends bloop theme
+Plug 'rktjmp/lush.nvim'
+" Bloop theme
+Plug 'nocksock/bloop.nvim'
+" NerdTree
+Plug 'preservim/nerdtree'
+" Project manager
+Plug 'ahmedkhalf/project.nvim'
+" Telescope deppens
+Plug 'nvim-lua/plenary.nvim'
+" Telescope
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.8' }
 
 call plug#end()
-" You can revert the settings after the call like so:
-"   filetype indent off   " Disable file-type-specific indentation
-"   syntax off            " Disable syntax highlighting
 
 
+" General config
+set number
+set termguicolors
 
+" Theme
+colorscheme bloop
+
+" NerdTree
+autocmd VimEnter * NERDTree | wincmd p
+
+" Short cuts
+
+" Cambiar entre buffers con Tab y Shift + Tab
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+
+" Cerrar buffer con Ctrl + W
+nnoremap <C-w> :bd<CR>
+
+" Guardar archivo con Ctrl + S
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+
+" Salir de Neovim con Ctrl + Q
+nnoremap <C-q> :q<CR>
+
+" Abrir el explorador de archivos con Ctrl + e
+nnoremap <C-e> :NERDTreeToggle<CR>
+
+" Pibotar entre archivo actual y NerdTree
+nnoremap <S-e> :wincmd w<CR>
+
+" Moverse entre ventanas con Ctrl + h/j/k/l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" Borrar un buffer sin cerrarlo con Ctrl + x
+nnoremap <C-w> :bp \| bd! %<CR>
+
+"
+nnoremap <space>p :Telescope projects<cr>
+
+" Buscar archivos con Telescope con Space + f
+nnoremap <space>f :Telescope find_files<CR>
+
+" Find files using Telescope command-line sugar.
+nnoremap <space>ff <cmd>Telescope find_files<cr>
+nnoremap <space>fg <cmd>Telescope live_grep<cr>
+nnoremap <space>fb <cmd>Telescope buffers<cr>
+nnoremap <space>fh <cmd>Telescope help_tags<cr>
+
+
+" Add config under this line ---
+
+" Config of lualine
+lua << END
+require('lualine').setup{
+
+options = {
+    icons_enabled = true,
+    theme = 'gruvbox_dark',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    always_show_tabline = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 100,
+      tabline = 100,
+      winbar = 100,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+
+require('telescope').load_extension('projects')
+
+require("project_nvim").setup {
+    manual_mode = false,  -- Detecta automáticamente la raíz del proyecto
+    detection_methods = { "lsp", "pattern" },  -- Usa LSP y patrones para detectar la raíz
+    patterns = { ".git", "package.json", "Makefile", ".nvimroot" },  -- Archivos que marcan la raíz
+    exclude_dirs = { "~/Downloads", "/tmp" },  -- Excluye estos directorios
+    show_hidden = true,  -- Muestra archivos ocultos en Telescope
+    silent_chdir = false,  -- Muestra mensajes cuando cambia de proyecto
+    scope_chdir = "global",  -- Cambia de directorio globalmente
+}
+
+END
