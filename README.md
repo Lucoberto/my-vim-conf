@@ -2,6 +2,12 @@
 
 ## Instaled plugins
 
-+ Airline
++ Lualine.nvim
++ Nvim-web-devicons
++ Vim-buftabline
++ Lush.nvim
++ Bloop.nvim
 + NerdTree
-+ syntastic
++ Project
++ Plenary
++ Telescope
